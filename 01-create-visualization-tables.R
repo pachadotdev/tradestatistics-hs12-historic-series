@@ -254,7 +254,7 @@ load("../comtrade-codes/02-2-tidy-product-data/product-codes.RData")
 
 product_names <- product_codes %>%
   filter(
-    classification == "H4",
+    classification == "H3",
     str_length(code) == 6
   ) %>%
   select(commodity_code = code, commodity_fullname_english = description) %>%
@@ -262,7 +262,7 @@ product_names <- product_codes %>%
 
 product_names_2 <- product_codes %>%
   filter(
-    classification == "H4",
+    classification == "H3",
     str_length(code) == 2
   ) %>%
   select(group_code = code, group_name = description)
