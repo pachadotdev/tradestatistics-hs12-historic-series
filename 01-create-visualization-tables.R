@@ -117,6 +117,33 @@ map(
   }
 )
 
+# YRPC alt ----------------------------------------------------------------
+
+# d_yrpc <- open_dataset("hs12-visualization/yrpc",
+#                        partitioning = c("year","reporter_iso"))
+#
+# map(
+#   2002:2020,
+#   function(y) {
+#     message(y)
+#
+#     y2 <- paste0("year=", y)
+#
+#     d_yrpc %>%
+#       filter(
+#         year == y2
+#       ) %>%
+#       collect() %>%
+#       mutate(
+#         year = remove_hive(year),
+#         reporter_iso = remove_hive(reporter_iso)
+#       ) %>%
+#       select(year, reporter_iso, partner_iso, commodity_code, everything()) %>%
+#       group_by(year) %>%
+#       write_dataset("hs12-visualization/yrpc_alt", hive_style = T)
+#   }
+# )
+
 # YRP ------------------------------------------------------------------
 
 d_yrpc <- open_dataset("hs12-visualization/yrpc",
