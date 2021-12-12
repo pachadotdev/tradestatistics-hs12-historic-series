@@ -16,6 +16,11 @@ map(
         collect() %>%
         mutate(year = remove_hive(year)) %>%
         select(year, reporter_iso, partner_iso, commodity_code, trade_value_usd_exp, trade_value_usd_imp) %>%
+        # just avoid decimals
+        mutate(
+          trade_value_usd_exp = ceiling(trade_value_usd_exp),
+          trade_value_usd_imp = ceiling(trade_value_usd_imp)
+        ) %>%
         group_by(year, reporter_iso) %>%
         write_dataset("hs12-visualization/yrpc-imputed", hive_style = T)
 
