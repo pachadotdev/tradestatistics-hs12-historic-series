@@ -21,6 +21,7 @@ map(
           trade_value_usd_exp = ceiling(trade_value_usd_exp),
           trade_value_usd_imp = ceiling(trade_value_usd_imp)
         ) %>%
+        arrange(reporter_iso) %>%
         group_by(year, reporter_iso) %>%
         write_dataset("hs12-visualization/yrpc-imputed", hive_style = T)
 
