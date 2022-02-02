@@ -2,6 +2,7 @@ library(dplyr)
 library(arrow)
 library(purrr)
 library(stringr)
+library(tidyr)
 
 out_dir <- "hs12-historic"
 try(dir.create(out_dir, recursive = T))

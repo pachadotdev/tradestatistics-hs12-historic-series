@@ -307,3 +307,38 @@ map(
       write_dataset("hs12-visualization/yr-groups", hive_style = T)
   }
 )
+
+# YR-Sections -------------------------------------------------------------
+
+map(
+  2002:2020,
+  function(y) {
+    message(y)
+
+    y2 <- paste0("year=", y)
+
+    if (!dir.exists(paste0("hs12-visualization/yr-sections/", y2))) {
+      open_dataset("hs12-visualization/yrc",
+                   partitioning = c("year","reporter_iso")) %>%
+        filter(
+          year == y2
+        ) %>%
+        collect() %>%
+        mutate(
+          year = remove_hive(year),
+          reporter_iso = remove_hive(reporter_iso)
+        ) %>%
+        left_join(
+          tradestatistics::ots_commodities %>%
+            select(commodity_code, section_code)
+        ) %>%
+        group_by(year, reporter_iso, section_code) %>%
+        summarise(
+          trade_value_usd_exp = sum(trade_value_usd_exp, na.rm = T),
+          trade_value_usd_imp = sum(trade_value_usd_imp, na.rm = T)
+        ) %>%
+        group_by(year) %>%
+        write_dataset("hs12-visualization/yr-sections", hive_style = T)
+    }
+  }
+)
