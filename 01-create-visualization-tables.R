@@ -1,7 +1,7 @@
 source("99-pkgs-funs-dirs.R")
 
 d_hs <- open_dataset("hs12-historic",
-  partitioning = c("aggregate_level", "trade_flow", "year", "reporter_iso"))
+  partitioning = c("trade_flow", "year", "reporter_iso"))
 
 # YRPC ------------------------------------------------------------------
 
@@ -12,26 +12,27 @@ map(
 
     y2 <- paste0("year=", y)
 
+    if (dir.exists(paste0("hs12-visualization/yrpc/", y2))) {
+      return(TRUE)
+    }
+
     # exp ----
 
     d_exp <- d_hs %>%
       filter(
-        aggregate_level == "aggregate_level=6",
         trade_flow == "trade_flow=export",
         year == y2
       ) %>%
       collect() %>%
       mutate(
-        aggregate_level = remove_hive(aggregate_level),
         trade_flow = remove_hive(trade_flow),
         year = remove_hive(year),
         reporter_iso = remove_hive(reporter_iso)
       ) %>%
-      select(aggregate_level, trade_flow, year, reporter_iso, partner_iso, commodity_code, trade_value_usd)
+      select(trade_flow, year, reporter_iso, partner_iso, commodity_code, trade_value_usd)
 
     d_reexp <- d_hs %>%
       filter(
-        aggregate_level == "aggregate_level=6",
         trade_flow == "trade_flow=re-export",
         year == y2
       ) %>%
@@ -55,22 +56,19 @@ map(
 
     d_imp <- d_hs %>%
       filter(
-        aggregate_level == "aggregate_level=6",
         trade_flow == "trade_flow=import",
         year == y2
       ) %>%
       collect() %>%
       mutate(
-        aggregate_level = remove_hive(aggregate_level),
         trade_flow = remove_hive(trade_flow),
         year = remove_hive(year),
         reporter_iso = remove_hive(reporter_iso)
       ) %>%
-      select(aggregate_level, trade_flow, year, reporter_iso, partner_iso, commodity_code, trade_value_usd)
+      select(trade_flow, year, reporter_iso, partner_iso, commodity_code, trade_value_usd)
 
     d_reimp <- d_hs %>%
       filter(
-        aggregate_level == "aggregate_level=6",
         trade_flow == "trade_flow=re-import",
         year == y2
       ) %>%
@@ -95,7 +93,7 @@ map(
     # full ----
 
     d_exp_corrected %>%
-      select(-c(aggregate_level, trade_flow)) %>%
+      select(-trade_flow) %>%
       full_join(d_imp_corrected, by = c("reporter_iso", "partner_iso", "commodity_code")) %>%
       rename(
         trade_value_usd_exp = trade_value_usd.x,
@@ -129,6 +127,10 @@ map(
 
     y2 <- paste0("year=", y)
 
+    if (dir.exists(paste0("hs12-visualization/yrp/", y2))) {
+      return(TRUE)
+    }
+
     d_yrpc %>%
       filter(
         year == y2
@@ -155,6 +157,10 @@ map(
     message(y)
 
     y2 <- paste0("year=", y)
+
+    if (dir.exists(paste0("hs12-visualization/yrc/", y2))) {
+      return(TRUE)
+    }
 
     d_yrpc %>%
       filter(
@@ -183,6 +189,10 @@ map(
     message(y)
 
     y2 <- paste0("year=", y)
+
+    if (dir.exists(paste0("hs12-visualization/yr/", y2))) {
+      return(TRUE)
+    }
 
     d_yr <- d_yrpc %>%
       filter(
@@ -213,6 +223,10 @@ map(
     message(y)
 
     y2 <- paste0("year=", y)
+
+    if (dir.exists(paste0("hs12-visualization/yc/", y2))) {
+      return(TRUE)
+    }
 
     d_yrpc %>%
       filter(
@@ -287,6 +301,10 @@ map(
     message(y)
 
     y2 <- paste0("year=", y)
+
+    if (dir.exists(paste0("hs12-visualization/yr-groups/", y2))) {
+      return(TRUE)
+    }
 
     d_yrc %>%
       filter(
